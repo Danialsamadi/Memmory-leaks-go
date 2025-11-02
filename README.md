@@ -1,4 +1,4 @@
-# Go Memory Leaks: Educational Repository
+# Go Memory Leaks:
 
 ## Quick Links
 
