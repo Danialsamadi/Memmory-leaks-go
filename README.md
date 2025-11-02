@@ -98,7 +98,7 @@ Get started in under 5 minutes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/go-memory-leaks-educational.git
+git clone https://github.com/Danialsamadi/Memmory-leaks-go.git
 cd go-memory-leaks-educational
 
 # Run your first leak example
