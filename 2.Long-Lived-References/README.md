@@ -558,7 +558,7 @@ More details: [Detection Methods](./resources/05-detection-methods.md)
 Demonstrates unbounded cache growth:
 
 ```bash
-cd 2.Long-Lived-References
+cd 2.Long-Lived-References/examples/cache-leak
 go run example_cache.go
 ```
 
@@ -582,6 +582,7 @@ go run example_cache.go
 Shows proper LRU cache with size limits:
 
 ```bash
+cd 2.Long-Lived-References/examples/cache-fixed
 go run fixed_cache.go
 ```
 
@@ -604,6 +605,7 @@ go run fixed_cache.go
 Demonstrates the slice reslicing memory trap:
 
 ```bash
+cd 2.Long-Lived-References/examples/reslicing-leak
 go run example_reslicing.go
 ```
 
@@ -620,6 +622,7 @@ Full arrays still in memory!
 Shows proper slice copying:
 
 ```bash
+cd 2.Long-Lived-References/examples/reslicing-fixed
 go run fixed_reslicing.go
 ```
 
@@ -640,6 +643,7 @@ Comprehensive guide: [pprof Analysis](./pprof_analysis.md)
 
 ```bash
 # 1. Start leaky cache example
+cd 2.Long-Lived-References/examples/cache-leak
 go run example_cache.go &
 
 # 2. Collect initial heap profile
