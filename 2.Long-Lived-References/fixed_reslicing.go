@@ -42,19 +42,20 @@ func main() {
 
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
-	
+
 	fmt.Printf("\n[AFTER Processing] Heap Alloc: %d MB\n", m.Alloc/1024/1024)
 	fmt.Printf("Kept only headers (1 KB each × 100 = 0.1 MB)\n")
 	fmt.Printf("Headers properly copied, arrays freed by GC\n")
 	fmt.Println("\nPress Ctrl+C to stop")
 
+	// Keep running for profiling
 	select {}
 }
 
 func processFileCorrectly(fileNum int) FileHeader {
 	// Simulate reading 10 MB file
 	fileData := make([]byte, 10*1024*1024) // 10 MB
-	
+
 	// Fill with data
 	for i := range fileData {
 		fileData[i] = byte(i % 256)
@@ -72,4 +73,3 @@ func processFileCorrectly(fileNum int) FileHeader {
 		Header: header, // Only 1 KB, independent of fileData
 	}
 }
-

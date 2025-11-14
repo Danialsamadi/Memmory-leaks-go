@@ -84,10 +84,13 @@ func (c *LRUCache) Len() int {
 
 var (
 	// LRU cache with max 1000 items
-	cache = NewLRUCache(1000)
+	cache *LRUCache
 )
 
 func main() {
+	// Initialize LRU cache with max 1000 items
+	cache = NewLRUCache(1000)
+	
 	// Start pprof server
 	go func() {
 		fmt.Println("pprof server running on http://localhost:6060")

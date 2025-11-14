@@ -42,19 +42,20 @@ func main() {
 
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
-	
+
 	fmt.Printf("\n[AFTER Processing] Heap Alloc: %d MB\n", m.Alloc/1024/1024)
 	fmt.Printf("Kept only headers (1 KB each × 100 = 0.1 MB expected)\n")
 	fmt.Printf("But full arrays still in memory! (~1000 MB leaked)\n")
 	fmt.Println("\nPress Ctrl+C to stop")
 
+	// Keep running for profiling
 	select {}
 }
 
 func processFileBadly(fileNum int) FileHeader {
 	// Simulate reading 10 MB file
 	fileData := make([]byte, 10*1024*1024) // 10 MB
-	
+
 	// Fill with data to prevent optimization
 	for i := range fileData {
 		fileData[i] = byte(i % 256)
@@ -69,4 +70,3 @@ func processFileBadly(fileNum int) FileHeader {
 		Header: header, // Keeps entire 10 MB array alive
 	}
 }
-
