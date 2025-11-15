@@ -50,18 +50,18 @@ func main() {
 		if err := processor.processFileCorrectly(tempDir); err != nil {
 			log.Printf("Error processing file: %v", err)
 		}
-		
+
 		// Report every 2 seconds
 		if time.Since(lastReport) >= reportInterval {
 			currentFDs := countOpenFileDescriptors()
 			elapsed := time.Since(startTime).Seconds()
-			fmt.Printf("[AFTER %.0fs] Open FDs: %d  |  Files opened: %d  |  Files closed: %d\n", 
+			fmt.Printf("[AFTER %.0fs] Open FDs: %d  |  Files opened: %d  |  Files closed: %d\n",
 				elapsed, currentFDs, processor.filesOpened, processor.filesClosed)
-			
+
 			if currentFDs <= initialFDs+10 {
 				fmt.Println("✓ No leak! File descriptors stable")
 			}
-			
+
 			lastReport = time.Now()
 		}
 	}

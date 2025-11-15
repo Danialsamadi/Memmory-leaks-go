@@ -59,18 +59,18 @@ func main() {
 		if _, err := gateway.fetchDataCorrectly(); err != nil {
 			log.Printf("Error fetching data: %v", err)
 		}
-		
+
 		// Report every 2 seconds
 		if time.Since(lastReport) >= reportInterval {
 			goroutines := runtime.NumGoroutine()
 			elapsed := time.Since(startTime).Seconds()
-			fmt.Printf("[AFTER %.0fs] Goroutines: %d  |  Requests made: %d\n", 
+			fmt.Printf("[AFTER %.0fs] Goroutines: %d  |  Requests made: %d\n",
 				elapsed, goroutines, gateway.requestsMade)
-			
+
 			if goroutines <= initialGoroutines+5 {
 				fmt.Println("✓ No leak! Connections properly reused")
 			}
-			
+
 			lastReport = time.Now()
 		}
 	}

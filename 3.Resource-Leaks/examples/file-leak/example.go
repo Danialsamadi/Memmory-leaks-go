@@ -58,7 +58,7 @@ func main() {
 				elapsed, currentFDs, processor.filesOpened)
 
 			if currentFDs > initialFDs+100 {
-				fmt.Println("\n⚠️  WARNING: File descriptor leak detected!")
+				fmt.Println("\n WARNING: File descriptor leak detected!")
 				fmt.Println("pprof server running on http://localhost:6060")
 				fmt.Println("Run: curl http://localhost:6060/debug/pprof/goroutine > goroutine.pprof")
 				fmt.Println("Run: lsof -p", os.Getpid(), "| wc -l")
