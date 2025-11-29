@@ -6,7 +6,10 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"os/exec"
 	"runtime"
+	"strconv"
+	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -95,7 +98,7 @@ func (fp *FileProcessor) processFilesBadly(tempDir string, numFiles int) {
 			continue
 		}
 
-		// ❌ BUG: This defer accumulates!
+		// BUG: This defer accumulates!
 		// It won't execute until processFilesBadly returns
 		// All files stay open during the entire loop!
 		defer file.Close()
@@ -121,16 +124,31 @@ func (fp *FileProcessor) processFilesBadly(tempDir string, numFiles int) {
 	// All defers execute HERE, in LIFO order
 }
 
-// countOpenFileDescriptors returns approximate count of open file descriptors
+// countOpenFileDescriptors returns count of open file descriptors
 func countOpenFileDescriptors() int {
-	// Try to read from /dev/fd on macOS or /proc/self/fd on Linux
-	if entries, err := os.ReadDir("/dev/fd"); err == nil {
-		return len(entries)
+	pid := os.Getpid()
+
+	// Try using lsof on macOS/Linux (most accurate)
+	cmd := exec.Command("lsof", "-p", strconv.Itoa(pid))
+	output, err := cmd.Output()
+	if err == nil {
+		// Count lines, subtract 1 for header
+		lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+		if len(lines) > 1 {
+			return len(lines) - 1
+		}
 	}
+
+	// Fallback: Try /proc/self/fd on Linux
 	if entries, err := os.ReadDir("/proc/self/fd"); err == nil {
 		return len(entries)
 	}
-	// Fallback: rough estimate
+
+	// Fallback: Try /dev/fd on macOS (less accurate but better than nothing)
+	if entries, err := os.ReadDir("/dev/fd"); err == nil {
+		return len(entries)
+	}
+
+	// Last resort: rough estimate
 	return runtime.NumGoroutine() + 5
 }
-

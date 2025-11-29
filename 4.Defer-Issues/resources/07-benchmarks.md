@@ -387,3 +387,5 @@ Defer-in-loop issues cause predictable, preventable production failures. The pat
 - [Refactoring Patterns](04-refactoring-patterns.md)
 - [Detection Methods](06-detection-methods.md)
 
+
+

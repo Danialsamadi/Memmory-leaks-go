@@ -624,3 +624,5 @@ linters-settings:
 - [Performance Impact](05-performance-impact.md) — Benchmarks of different patterns
 - [Detection Methods](06-detection-methods.md) — How to find defer issues automatically
 
+
+

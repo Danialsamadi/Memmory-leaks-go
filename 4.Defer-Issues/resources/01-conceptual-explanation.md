@@ -138,21 +138,21 @@ Go maintains a linked list of defer records per goroutine. Understanding this he
 │                                             │
 │  Defer Stack (grows with each iteration):   │
 │                                             │
-│    ┌───────────────────┐                   │
-│    │ defer: file3.Close │ ← Most recent    │
-│    └─────────┬─────────┘                   │
-│              │                             │
-│    ┌─────────▼─────────┐                   │
-│    │ defer: file2.Close │                   │
-│    └─────────┬─────────┘                   │
-│              │                             │
-│    ┌─────────▼─────────┐                   │
-│    │ defer: file1.Close │ ← First defer    │
-│    └───────────────────┘                   │
+│    ┌───────────────────┐                    │
+│    │ defer: file3.Close│ ← Most recent      │
+│    └─────────┬─────────┘                    │
+│              │                              │
+│    ┌─────────▼─────────┐                    │
+│    │ defer: file2.Close│                    │
+│    └─────────┬─────────┘                    │
+│              │                              │
+│    ┌─────────▼─────────┐                    │
+│    │ defer: file1.Close│ ← First defer      │
+│    └───────────────────┘                    │
 │                                             │
-│  All three files remain OPEN until         │
-│  this function returns and the defer       │
-│  stack unwinds (LIFO order)               │
+│  All three files remain OPEN until          │
+│  this function returns and the defer        │
+│  stack unwinds (LIFO order)                 │
 │                                             │
 └─────────────────────────────────────────────┘
 ```
@@ -389,4 +389,5 @@ If the answer is no, extract to a separate function.
 - [Defer Stack Internals](02-defer-stack-internals.md) — How Go implements defer
 - [Refactoring Patterns](04-refactoring-patterns.md) — Detailed fix strategies
 - [Detection Methods](06-detection-methods.md) — How to find defer issues
+
 

@@ -40,8 +40,8 @@ func main() {
 	demonstrateClosureBug()
 
 	fmt.Println("\n=== Analysis ===")
-	fmt.Println("BUG: All defers captured the same variable 'conn' by reference.")
-	fmt.Println("When defers execute, 'conn' holds its final value (connection 4).")
+	fmt.Println("BUG: All defers captured the same variable 'connPtr' by reference.")
+	fmt.Println("When defers execute, 'connPtr' holds its final value (connection 4).")
 	fmt.Println("Result: Connection 4 closed 5 times, connections 0-3 never closed!")
 }
 
@@ -60,23 +60,25 @@ func demonstrateClosureBug() {
 
 	fmt.Println("\n--- Setting up defers with closure bug ---")
 
-	// ❌ BUG: All closures capture the same 'conn' variable
-	// When the defers execute, they all see the FINAL value of 'conn'
-	for _, conn := range connections {
+	// BUG: All closures capture the same 'connPtr' variable by reference
+	// When the defers execute, they all see the FINAL value of 'connPtr'
+	// This pattern demonstrates the bug even in Go 1.22+
+	var connPtr *Connection
+	for i := 0; i < len(connections); i++ {
+		connPtr = connections[i] // Update the shared pointer
 		defer func() {
-			// BUG: 'conn' is captured by reference, not by value!
+			// BUG: 'connPtr' is captured by reference, not by value!
 			// All 5 closures will close the same connection (the last one)
 			fmt.Printf("  Defer executing: attempting to close connection %d at %s\n",
-				conn.ID, conn.Address)
-			conn.Close()
+				connPtr.ID, connPtr.Address)
+			connPtr.Close()
 		}()
 	}
 
-	fmt.Println("Defers registered. Loop variable 'conn' now points to last connection.")
+	fmt.Println("Defers registered. Variable 'connPtr' now points to last connection.")
 	fmt.Println()
 	fmt.Println("--- Function returning, executing defers (LIFO order) ---")
 
 	// When this function returns, all 5 defers execute
-	// But they all captured the same 'conn' variable which now points to connections[4]
+	// But they all captured the same 'connPtr' variable which now points to connections[4]
 }
-

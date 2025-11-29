@@ -458,3 +458,5 @@ for _, item := range items {
 - [Refactoring Patterns](04-refactoring-patterns.md) — How to fix defer issues
 - [Defer Stack Internals](02-defer-stack-internals.md) — Why accumulation happens
 
+
+
