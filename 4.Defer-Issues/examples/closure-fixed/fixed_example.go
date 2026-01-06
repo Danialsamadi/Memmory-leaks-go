@@ -56,7 +56,7 @@ func demonstrateFixWithArgument() {
 	fmt.Println("--- Setting up defers with argument passing ---")
 
 	for _, conn := range connections {
-		// ✅ FIX: Pass 'conn' as argument to the closure
+		// FIX: Pass 'conn' as argument to the closure
 		// Arguments are evaluated at defer registration time
 		defer func(c *Connection) {
 			fmt.Printf("  Defer executing: closing connection %d at %s\n", c.ID, c.Address)
@@ -90,31 +90,38 @@ func demonstrateFixWithShadowing() {
 }
 
 // demonstrateFixWithExtraction shows the fix: extract cleanup to separate function
+// This pattern is best for complex cleanup logic that needs its own function
 func demonstrateFixWithExtraction() {
 	connections := createConnections()
 
 	fmt.Println("--- Setting up defers with extracted function ---")
 
 	for _, conn := range connections {
-		// ✅ FIX: Call a separate function that handles defer
-		// This is the cleanest pattern for complex cleanup logic
-		setupCleanup(conn)
+		// FIX: Call a separate function that handles the connection
+		// The connection value is passed as parameter, so it's captured correctly
+		// Each call to processConnection has its own defer that executes when that function returns
+		processConnection(conn)
 	}
 
-	fmt.Println("Defers registered via extracted function.")
+	fmt.Println("All connections processed and closed.")
 	fmt.Println()
-	fmt.Println("--- Function returning, executing defers (LIFO order) ---")
+	fmt.Println("--- Function returning ---")
+	fmt.Println("(Note: Defers in processConnection executed immediately when each function returned)")
 }
 
-// setupCleanup registers a defer for a single connection
+// processConnection handles a single connection with proper cleanup
 // The connection value is captured correctly because it's a function parameter
-func setupCleanup(conn *Connection) {
+func processConnection(conn *Connection) {
+	// ✅ FIX: Defer executes when THIS function returns, not the caller
+	// This ensures each connection is closed immediately after processing
 	defer func() {
 		fmt.Printf("  Defer executing: closing connection %d at %s\n", conn.ID, conn.Address)
 		conn.Close()
 	}()
-	// Note: This defer will execute when setupCleanup returns, not when the caller returns
-	// For demonstration, we'd need a different pattern if we want defers to execute later
+
+	// Simulate processing the connection
+	// In real code, this would do actual work with the connection
+	_ = conn
 }
 
 // createConnections creates test connections
